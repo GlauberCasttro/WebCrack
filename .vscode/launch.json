@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flask (app.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "env": {
+        "FLASK_APP": "app.py",
+        "FLASK_ENV": "development"
+      },
+      "args": [],
+      "jinja": true,
+      "justMyCode": false
+    },
+    {
+      "name": "Pipeline (test_pipeline.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/test_pipeline.py",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "justMyCode": false
+    }
+  ]
+}
