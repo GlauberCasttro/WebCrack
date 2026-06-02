@@ -73,6 +73,9 @@ async def run_analysis(
             
         yield _sse_event("done", "")
         
+    except core.UserFacingError as e:
+        log.warning("Pipeline stopped: %s", e)
+        yield _sse_event("error", str(e))
     except Exception as e:
         log.exception("Pipeline errored")
-        yield _sse_event("error", str(e))
+        yield _sse_event("error", "Erro inesperado na análise. Veja o log do servidor para detalhes.")

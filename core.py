@@ -17,6 +17,11 @@ load_dotenv()
 
 log = logging.getLogger(__name__)
 
+
+class UserFacingError(RuntimeError):
+    """Error that can be shown directly in the UI without a traceback."""
+
+
 CONFIG = {
     "model": "llama-3.3-70b-versatile", # modelo oficial Groq mais robusto
     "temperature": 0.3,
@@ -199,6 +204,11 @@ def _inject_loop_bypass(messages: list[dict]) -> list[dict]:
 
 async def _raw_stream(messages: list[dict], **overrides) -> AsyncIterator[str]:
     """Inner generator — calls Groq and yields tokens."""
+    if _groq is None:
+        raise UserFacingError(
+            "GROQ_API_KEY não configurada. Adicione a chave ao arquivo .env e reinicie o servidor."
+        )
+
     completion = await _groq.chat.completions.create(
         messages=messages,
         stream=True,
@@ -225,6 +235,15 @@ async def stream_llm(messages: list[dict], **overrides) -> AsyncIterator[str]:
             log.warning("Groq loop detection triggered — retrying with bypass tag.")
             async for token in _raw_stream(_inject_loop_bypass(messages), **overrides):
                 yield token
+        elif "expired_api_key" in err or "invalid api key" in err:
+            raise UserFacingError(
+                "GROQ_API_KEY inválida ou expirada. Gere uma nova chave no console da Groq "
+                "e atualize o arquivo .env, depois reinicie o servidor."
+            ) from exc
+        elif _groq is None:
+            raise UserFacingError(
+                "GROQ_API_KEY não configurada. Adicione a chave ao arquivo .env e reinicie o servidor."
+            ) from exc
         else:
             raise
 
@@ -316,5 +335,7 @@ def validate_env() -> tuple[bool, str]:
     """Returns (ok, warning_message)."""
     if not GROQ_API_KEY:
         return False, "GROQ_API_KEY não configurado no .env"
+    if GROQ_API_KEY == "your_groq_api_key_here":
+        return False, "GROQ_API_KEY ainda está com o valor de exemplo no .env"
     warn = "" if GITHUB_TOKEN else "GITHUB_TOKEN ausente — limite de 60 req/h na API pública"
     return True, warn

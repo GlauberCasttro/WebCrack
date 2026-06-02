@@ -28,8 +28,10 @@ def _run_stream(coro_factory, q: queue.Queue):
     asyncio.set_event_loop(loop)
     try:
         loop.run_until_complete(coro_factory(q))
+    except core.UserFacingError as exc:
+        q.put({"type": "error", "data": str(exc)})
     except Exception as exc:
-        q.put(f"\n\n❌ Erro: {exc}")
+        q.put({"type": "error", "data": f"Erro inesperado no servidor: {exc}"})
     finally:
         q.put(None)
         loop.close()
@@ -90,14 +92,18 @@ def analyze():
 
     async def _coro(q):
         full = ""
+        has_error = False
         async for event in pipeline.run_analysis(repo, query="__analysis__", chat_history=None):
             q.put(event)
             if event["type"] == "token":
                 full += event["data"]
+            elif event["type"] == "error":
+                has_error = True
         # Assíncrono concluído, salva em disco
-        threading.Thread(
-            target=lambda: core.save_analysis(repo, full), daemon=True
-        ).start()
+        if full and not has_error:
+            threading.Thread(
+                target=lambda: core.save_analysis(repo, full), daemon=True
+            ).start()
 
     threading.Thread(target=_run_stream, args=(_coro, q), daemon=True).start()
     return _sse_response(q)
