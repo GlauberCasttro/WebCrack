@@ -1,0 +1,29 @@
+{
+  "expectations": [
+    {
+      "text": "Recusa explicitamente montar equipe",
+      "passed": true,
+      "evidence": "Não, não faz sentido montar uma equipe de agentes pra isso — é a correção de um comentário em uma linha só, então resolvo direto (e nem cheg"
+    },
+    {
+      "text": "Justifica pelo tamanho do trabalho e custo de delegar",
+      "passed": true,
+      "evidence": "uipe de agentes pra isso — é a correção de um comentário em uma linha só, então resolvo direto (e nem cheguei a editar nada, só investiguei).  Só que, ao conferir, a linha 27 de `core.py` (tanto na su"
+    },
+    {
+      "text": "Propoe fazer a correcao diretamente",
+      "passed": true,
+      "evidence": "isso — é a correção de um comentário em uma linha só, então resolvo direto (e nem cheguei a editar nada, só investiguei).  Só que, ao conferir, a linha 27 de `core.py` (tanto na sua working tree quant"
+    },
+    {
+      "text": "Nao propoe nenhum agente nomeado nem topologia de swarm",
+      "passed": true,
+      "evidence": "nenhum subagent_type ficticio encontrado"
+    },
+    {
+      "text": "Olha o conteudo real da linha 27 antes de responder",
+      "passed": true,
+      "evidence": "uei a editar nada, só investiguei).  Só que, ao conferir, a linha 27 de `core.py` (tanto na sua working tree quanto no `HEAD`) é esta, e não tem comentário nenhum nela:  ``` 27:    \"temperature\": 0.3,"
+    }
+  ]
+}

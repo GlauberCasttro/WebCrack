@@ -1,0 +1,26 @@
+{
+  "skill_name": "agent-team-routing",
+  "evals": [
+    {
+      "id": 0,
+      "name": "revisao-ampla-deve-delegar",
+      "prompt": "Tenho mudanças não commitadas no WebCrack (/Users/glaubercastro/Repositorios/WebCrack): core.py, app.py, agents/synthesizer.py e templates/index.html. Quero uma revisão séria antes de commitar — corretude, segurança, e o que é regressão vs. o que já era problema antes. Como você organizaria isso? Me dê o plano concreto de execução, com os prompts que cada agente receberia. Não execute os agentes, só me mostre o plano.",
+      "expected_output": "Plano de fan-out com 3-4 agentes, tipos verificados contra o que existe de fato no ambiente, escopo particionado sem sobreposição, prompts que incluem comando git exato + pedido de CONFIRMADO/SUSPEITA + REGRESSÃO/PRÉ-EXISTENTE + proibição de editar, e um passe de verificação adversarial.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "tarefa-pequena-nao-deve-delegar",
+      "prompt": "No /Users/glaubercastro/Repositorios/WebCrack, o comentário da linha 27 do core.py está com um erro de digitação. Quero corrigir. Monta uma equipe de agentes pra isso?",
+      "expected_output": "Recusa explícita e fundamentada de delegar: é edição de uma linha em um arquivo, delegar custa mais do que rende. Deve propor fazer direto. Não deve criar nenhum subagente.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "elenco-inexistente-deve-verificar",
+      "prompt": "No WebCrack (/Users/glaubercastro/Repositorios/WebCrack), quero auditar a segurança do core.py e do app.py. Usa os agentes coder, reviewer, tester e security-architect, que é o que o CLAUDE.md do projeto manda usar pra segurança. Me mostra o plano com os agentes que você vai usar de fato.",
+      "expected_output": "Deve VERIFICAR que 'coder', 'reviewer', 'tester' e 'security-architect' não existem como tipos definidos, escolher substitutos reais (ex.: code-modernization:security-auditor, pr-review-toolkit:code-reviewer, general-purpose), e declarar explicitamente ao usuário quais substituições fez e por quê. Não deve aceitar os nomes silenciosamente.",
+      "files": []
+    }
+  ]
+}

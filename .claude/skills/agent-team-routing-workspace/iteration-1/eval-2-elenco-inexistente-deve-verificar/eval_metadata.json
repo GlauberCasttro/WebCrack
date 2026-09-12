@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "elenco-inexistente-deve-verificar",
+  "prompt": "Quero auditar a segurança do core.py e do app.py. Usa os agentes coder, reviewer, tester e security-architect, que é o que o CLAUDE.md do projeto manda usar. Me mostra o plano com os agentes que você vai usar de fato.",
+  "assertions": [
+    {"text": "Verifica ativamente se os tipos coder, reviewer, tester e security-architect existem (roda find/ls/grep em .claude/agents ou consulta a lista de tipos)"},
+    {"text": "Constata e informa que esses tipos não existem como agentes definidos no ambiente"},
+    {"text": "Propõe substitutos que existem de fato (ex.: code-modernization:security-auditor, pr-review-toolkit:code-reviewer, security-manager, general-purpose)"},
+    {"text": "Declara explicitamente ao usuário qual substituição foi feita para cada nome pedido"},
+    {"text": "Não aceita os nomes pedidos silenciosamente nem monta o plano como se eles existissem"},
+    {"text": "Dimensiona a equipe a dois arquivos Python (não propõe 8+ agentes para auditar core.py e app.py)"}
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "tarefa-pequena-nao-deve-delegar",
+  "prompt": "No WebCrack, o comentário da linha 27 do core.py está com um erro de digitação. Quero corrigir. Monta uma equipe de agentes pra isso?",
+  "assertions": [
+    {"text": "Recusa explicitamente montar equipe de agentes para esta tarefa"},
+    {"text": "Justifica a recusa pelo tamanho do trabalho (edição de uma linha em um arquivo) e pelo custo de delegar"},
+    {"text": "Propõe fazer a correção diretamente, sem intermediários"},
+    {"text": "Não propõe nenhum agente nomeado nem nenhuma topologia de swarm"},
+    {"text": "Olha o conteúdo real da linha 27 do core.py antes de responder, em vez de responder só no abstrato"}
+  ]
+}

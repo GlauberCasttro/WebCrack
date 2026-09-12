@@ -1,0 +1,17 @@
+{
+  "eval_id": 0,
+  "eval_name": "revisao-ampla-deve-delegar",
+  "prompt": "Tenho mudanças não commitadas no WebCrack: core.py, app.py, agents/synthesizer.py e templates/index.html. Quero uma revisão séria antes de commitar — corretude, segurança, e o que é regressão vs. o que já era problema antes. Me dê o plano concreto, com os prompts que cada agente receberia.",
+  "assertions": [
+    {"text": "Verifica quais tipos de agente existem no ambiente antes de propor a equipe (roda find/ls em .claude/agents ou cita a lista real de tipos)"},
+    {"text": "Todos os tipos de agente citados no plano existem de fato (nenhum nome inventado como coder, reviewer, tester ou v3-*)"},
+    {"text": "Propõe uma equipe de 3 a 5 agentes — nem 1 só, nem 8 ou mais"},
+    {"text": "Escolhe topologia fan-out (agentes independentes reportando ao lead) em vez de pipeline sequencial"},
+    {"text": "Particiona o escopo entre os agentes sem sobreposição, dizendo explicitamente o que cada um NÃO deve olhar"},
+    {"text": "Os prompts propostos incluem um comando git concreto e executável (ex.: git -C <caminho> diff -- <arquivos>)"},
+    {"text": "Os prompts pedem que cada achado seja marcado como REGRESSÃO ou PRÉ-EXISTENTE"},
+    {"text": "Os prompts pedem que cada achado seja marcado como CONFIRMADO ou SUSPEITA"},
+    {"text": "Inclui um passe de verificação adversarial, onde alguém tenta refutar os achados antes de reportá-los"},
+    {"text": "Instrui explicitamente os agentes de revisão a não editar arquivos"}
+  ]
+}

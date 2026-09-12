@@ -21,6 +21,13 @@ app = Flask(__name__)
 TEMPLATES_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
 
+def _env_flag(name: str, default: bool = False) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.lower() in {"1", "true", "yes", "on"}
+
+
 # ── SSE helpers ───────────────────────────────────────────────────────────────
 
 def _run_stream(coro_factory, q: queue.Queue):
@@ -160,7 +167,11 @@ def delete_analysis(name):
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    url = "http://127.0.0.1:5000"
+    port = int(os.getenv("PORT", "5000"))
+    debug = _env_flag("FLASK_DEBUG", default=True)
+    open_browser = _env_flag("WEBCRACK_OPEN_BROWSER", default=True)
+    url = f"http://127.0.0.1:{port}"
     print(f"\n🚀  Abrindo Deep GitHub Analyzer em {url}\n")
-    threading.Timer(1.2, lambda: webbrowser.open(url)).start()
-    app.run(debug=False, threaded=True, port=5000)
+    if open_browser:
+        threading.Timer(1.2, lambda: webbrowser.open(url)).start()
+    app.run(debug=debug, threaded=True, port=port, use_reloader=False)

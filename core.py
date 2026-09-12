@@ -25,13 +25,13 @@ class UserFacingError(RuntimeError):
 CONFIG = {
     "model": "llama-3.3-70b-versatile", # modelo oficial Groq mais robusto
     "temperature": 0.3,
-    "max_tokens": 2048,           # limitado para evitar erro 413 do Groq
+    "max_tokens": 4096,           # aumentado de 2048 para 4096
     "top_p": 1,
-    "readme_preview_chars": 2000, # menos caracteres para economizar tokens
+    "readme_preview_chars": 5000, # aumentado de 2000 para 5000 para ler mais do README
     "search_results": 5,
     "http_timeout": 15,
     "http_retries": 3,
-    "output_dir": "analises",
+    "output_dir": os.path.join(os.path.dirname(os.path.abspath(__file__)), "analises"),
 }
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -142,12 +142,40 @@ _INTERESTING_DIRS = {"src", "lib", "packages", "apps", "agents", "skills",
                      "tools", "plugins", "modules", "core", "components"}
 
 
-def get_file_tree(full_name: str, max_files: int = 120) -> list[str]:
-    """Builds a file tree by exploring root + one level of interesting subdirs."""
-    paths: list[str] = []
-    root_items = get_repo_contents(full_name, "")
+def get_file_tree(full_name: str, default_branch: str = "main", max_files: int = 120) -> list[str]:
+    """Builds a file tree by fetching the recursive Git tree in one call."""
+    url = f"https://api.github.com/repos/{full_name}/git/trees/{default_branch}?recursive=true"
+    data = _get_json(url)
+    if not isinstance(data, dict) or "tree" not in data:
+        # Try master branch fallback
+        if default_branch == "main":
+            url = f"https://api.github.com/repos/{full_name}/git/trees/master?recursive=true"
+            data = _get_json(url)
 
-    dirs_to_explore: list[str] = []
+    if isinstance(data, dict) and "tree" in data:
+        paths: list[str] = []
+        for item in data["tree"]:
+            path = item.get("path", "")
+            if not path:
+                continue
+            # Format directories with a trailing slash to match original behavior
+            formatted_path = path + "/" if item.get("type") == "tree" else path
+            
+            # Filter based on interesting directories
+            parts = path.split("/")
+            if len(parts) == 1:
+                paths.append(formatted_path)
+            elif parts[0].lower() in _INTERESTING_DIRS:
+                if len(parts) <= 3:
+                    paths.append(formatted_path)
+                elif len(parts) == 4 and parts[1].lower() in _INTERESTING_DIRS:
+                    paths.append(formatted_path)
+        return paths[:max_files]
+
+    # Fallback to manual sequential exploration if git trees API is not available
+    paths = []
+    root_items = get_repo_contents(full_name, "")
+    dirs_to_explore = []
     for item in root_items:
         if item.get("type") == "file":
             paths.append(item["path"])
@@ -156,7 +184,6 @@ def get_file_tree(full_name: str, max_files: int = 120) -> list[str]:
             if item["name"].lower() in _INTERESTING_DIRS:
                 dirs_to_explore.append(item["path"])
 
-    # Explore one level deeper in interesting dirs
     for d in dirs_to_explore:
         if len(paths) >= max_files:
             break
@@ -168,14 +195,12 @@ def get_file_tree(full_name: str, max_files: int = 120) -> list[str]:
                 paths.append(item["path"])
             elif item.get("type") == "dir":
                 paths.append(item["path"] + "/")
-                # One more level for skill-like dirs
                 if item["name"].lower() in _INTERESTING_DIRS:
                     sub2 = get_repo_contents(full_name, item["path"])
                     for i2 in sub2:
                         if len(paths) >= max_files:
                             break
                         paths.append(i2["path"] + ("/" if i2.get("type") == "dir" else ""))
-
     return paths[:max_files]
 
 
@@ -323,8 +348,9 @@ async def fetch_repo_context(repo_info: dict) -> tuple[str, list[str]]:
     """Runs blocking GitHub calls in a thread pool to not block the event loop."""
     loop = asyncio.get_event_loop()
     full_name = repo_info["full_name"]
+    default_branch = repo_info.get("default_branch") or "main"
     file_list, readme = await asyncio.gather(
-        loop.run_in_executor(None, get_file_tree, full_name),
+        loop.run_in_executor(None, get_file_tree, full_name, default_branch),
         loop.run_in_executor(None, find_readme, full_name),
     )
     readme_preview = readme[: CONFIG["readme_preview_chars"]]

@@ -111,7 +111,7 @@ Use Markdown com tabelas onde adequado."""
 {files_section or '(nenhum arquivo lido para esta consulta)'}
 
 ### README (prévia)
-{readme[:3000] or 'Não disponível'}
+{readme[:5000] or 'Não disponível'}
 
 ## Pergunta
 {intent.query}

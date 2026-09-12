@@ -1,0 +1,54 @@
+{
+  "expectations": [
+    {
+      "text": "Verifica quais tipos de agente existem antes de propor a equipe",
+      "passed": true,
+      "evidence": "lenco disponível (verificado agora, não presumido)  ```bash find .claude/agents -name \"*.md\" | sed 's|.claude/agents/||;s|\\.md$||' | sort ``` retornou só stubs genéricos do ruflo/claude-flow: `consens"
+    },
+    {
+      "text": "Todos os tipos citados existem de fato (sem nomes inventados)",
+      "passed": true,
+      "evidence": "rramenta `Agent` (a que importa) tem, entre os relevantes: `pr-review-toolkit:code-reviewer`, `pr-review-toolkit:silent-failure-hunter`, `feature-dev:code-reviewer`, `feature-dev:code-explorer`, `code"
+    },
+    {
+      "text": "Propoe equipe de 3 a 5 agentes",
+      "passed": true,
+      "evidence": "amanho da equipe  Diff médio, 3 dimensões independentes → **3 agentes** (a tabela da skill recomenda 1–2 para 3–8 arquivos numa dimensão, 3–4 para diff médio com múltiplas dimensões; aqui ficam 4 arqu"
+    },
+    {
+      "text": "Escolhe topologia fan-out",
+      "passed": true,
+      "evidence": "não uma segunda rodada completa.  ## Passo 4 — Topologia  **Fan-out** para os três revisores: nenhum depende do resultado do outro, cada um ataca um recorte de arquivo diferente. Isso casa com a orien"
+    },
+    {
+      "text": "Particiona escopo dizendo o que cada agente NAO olha",
+      "passed": true,
+      "evidence": ".py`)  ``` Escopo: SOMENTE core.py e agents/synthesizer.py. Não olhe app.py nem templates/index.html — outros agentes cobrem esses.  Comece com:   git -C /Users/glaubercastro/Repositorios/WebCrack dif"
+    },
+    {
+      "text": "Prompts incluem comando git concreto",
+      "passed": true,
+      "evidence": "orreção pontual, então delegar compensa.  Já olhei o diff (`git diff --stat`): 76 inserções / 67 remoções, nada gigante, mas com uma reescrita real de lógica em `core.py` (a função `get_file_tree`) e"
+    },
+    {
+      "text": "Pede marcacao REGRESSAO vs PRE-EXISTENTE",
+      "passed": true,
+      "evidence": "tar erro 413 do Groq. Isso foi removido/ignorado — é uma    regressão de correção deliberada ou um esquecimento? Veja se há alguma    validação de tamanho de payload em outro lugar que compense. 3. CO"
+    },
+    {
+      "text": "Pede marcacao CONFIRMADO vs SUSPEITA",
+      "passed": true,
+      "evidence": "todo).  Formato de saída: lista de achados, cada um com: - CONFIRMADO (você leu o código e traçou o caminho) ou SUSPEITA (não confirmou) - REGRESSÃO (o diff piorou algo que funcionava) ou PRÉ-EXISTEN"
+    },
+    {
+      "text": "Inclui passe de verificacao adversarial (refutar achados)",
+      "passed": true,
+      "evidence": "gentes é o número certo, não 6). Acrescento **1 verificador adversarial** pontual só para o achado de maior severidade que aparecer (ver Passo 6) — não uma segunda rodada completa.  ## Passo 4 — Topol"
+    },
+    {
+      "text": "Instrui agentes a nao editar arquivos",
+      "passed": true,
+      "evidence": "o errado Y (nada de \"pode causar   problemas\" sem exemplo)  Não edite nenhum arquivo. Isto é revisão, não correção. ```  ### → `reviewer-security` (segurança — `app.py` + rede em `core.py`)  ``` Escop"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "expectations": [
+    {
+      "text": "Verifica quais tipos de agente existem antes de propor a equipe",
+      "passed": false,
+      "evidence": "nao encontrado"
+    },
+    {
+      "text": "Todos os tipos citados existem de fato (sem nomes inventados)",
+      "passed": false,
+      "evidence": "nao encontrado"
+    },
+    {
+      "text": "Propoe equipe de 3 a 5 agentes",
+      "passed": false,
+      "evidence": "nao encontrado"
+    },
+    {
+      "text": "Escolhe topologia fan-out",
+      "passed": true,
+      "evidence": "ler tudo sequencialmente.  ## 2. Estratégia de execução  **Fan-out por especialidade + uma etapa de triagem no final.** Três revisores trabalham em paralelo sobre o mesmo diff (cada um com um recorte"
+    },
+    {
+      "text": "Particiona escopo dizendo o que cada agente NAO olha",
+      "passed": true,
+      "evidence": "eue`) removida — texto acumula direto em `accText` | | `.gitignore`, `.vscode/launch.json` | Ajustes de tooling local (ruflo, porta de debug) | | `AGENTS.md` | Deletado (59 linhas) |  Isso mistura pel"
+    },
+    {
+      "text": "Prompts incluem comando git concreto",
+      "passed": true,
+      "evidence": "# Plano de revisão pré-commit — WebCrack  Só li o diff (`git diff`) e os arquivos completos para me situar — não editei nada. Abaixo está o plano concreto, incluindo os prompts que cada agente rece"
+    },
+    {
+      "text": "Pede marcacao REGRESSAO vs PRE-EXISTENTE",
+      "passed": true,
+      "evidence": "`git log -p`/`git blame` para classificar cada ponto como **regressão** (o diff piorou algo que funcionava) ou **problema pré-existente** (já estava lá, o diff só tocou a área).  Não uso pipeline sequ"
+    },
+    {
+      "text": "Pede marcacao CONFIRMADO vs SUSPEITA",
+      "passed": false,
+      "evidence": "nao encontrado"
+    },
+    {
+      "text": "Inclui passe de verificacao adversarial (refutar achados)",
+      "passed": false,
+      "evidence": "nao encontrado"
+    },
+    {
+      "text": "Instrui agentes a nao editar arquivos",
+      "passed": true,
+      "evidence": "diff (`git diff`) e os arquivos completos para me situar — não editei nada. Abaixo está o plano concreto, incluindo os prompts que cada agente receberia. Não executei nenhum agente.  ## 1. O que está"
+    }
+  ]
+}

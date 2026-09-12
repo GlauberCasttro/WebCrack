@@ -5,3 +5,7 @@ __pycache__/
 *$py.class
 .DS_Store
 analises/
+
+# ruflo / claude-flow (runtime local)
+.swarm/
+.claude-flow/

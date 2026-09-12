@@ -419,7 +419,7 @@
 <body>
 
 <header>
-  <div class="logo">⚡ Deep GitHub Analyzer <span>Groq · GPT-OSS-120B</span></div>
+  <div class="logo">⚡ Deep GitHub Analyzer <span>Groq · Llama 3.3 70B</span></div>
   <div id="status-bar">carregando…</div>
 </header>
 
@@ -655,7 +655,7 @@ function doAnalyze() {
   out.innerHTML = '';
   document.getElementById('chat-messages').innerHTML = '';
 
-  var tokenQueue = [], accText = '', sseComplete = false, drainTimer = null;
+  var accText = '';
 
   var renderTimer = setInterval(function() {
     if (accText) {
@@ -663,28 +663,6 @@ function doAnalyze() {
       out.scrollTop = out.scrollHeight;
     }
   }, 80);
-
-  function drainChars() {
-    if (tokenQueue.length > 0) {
-      accText += tokenQueue.shift();
-      drainTimer = setTimeout(drainChars, 20);
-    } else if (sseComplete) {
-      clearInterval(renderTimer);
-      streaming = false;
-      out.innerHTML = marked.parse(sessions[currentKey].analysis);
-      out.scrollTop = 0;
-      sessions[currentKey].chatMessages = [{
-        role: 'system',
-        content: 'Você é um assistente técnico especialista em repositórios GitHub. Acabou de analisar ' +
-                 selectedRepo.full_name + '.\n\nAnálise inicial:\n' + sessions[currentKey].analysis
-      }];
-      document.getElementById('send-btn').disabled = false;
-      setStatus('✅ Análise concluída — use o Chat para perguntas.', 'ok');
-      renderSessionsList();
-    } else {
-      drainTimer = null;
-    }
-  }
 
   fetch('/analyze', {
     method: 'POST',
@@ -699,18 +677,26 @@ function doAnalyze() {
         throw new Error(evt.data);
       } else if (evt.type === 'token') {
         sessions[currentKey].analysis += evt.data;
-        evt.data.split('').forEach(function(ch) { tokenQueue.push(ch); });
-        if (!drainTimer) drainChars();
+        accText += evt.data;
       }
     });
   })
   .then(function() {
-    sseComplete = true;
-    if (!drainTimer) drainChars();
+    clearInterval(renderTimer);
+    streaming = false;
+    out.innerHTML = marked.parse(sessions[currentKey].analysis);
+    out.scrollTop = 0;
+    sessions[currentKey].chatMessages = [{
+      role: 'system',
+      content: 'Você é um assistente técnico especialista em repositórios GitHub. Acabou de analisar ' +
+               selectedRepo.full_name + '.\n\nAnálise inicial:\n' + sessions[currentKey].analysis
+    }];
+    document.getElementById('send-btn').disabled = false;
+    setStatus('✅ Análise concluída — use o Chat para perguntas.', 'ok');
+    renderSessionsList();
   })
   .catch(function(e) {
     clearInterval(renderTimer);
-    if (drainTimer) { clearTimeout(drainTimer); drainTimer = null; }
     streaming = false;
     setStatus('Erro na análise: ' + e.message, 'err');
   });
@@ -737,7 +723,7 @@ function doChat() {
   var botBubble = botDiv.querySelector('.msg-bubble');
   botBubble.classList.add('rendered');
 
-  var reply = '', tokenQueue = [], accText = '', sseComplete = false, drainTimer = null;
+  var reply = '', accText = '';
 
   var renderTimer = setInterval(function() {
     if (accText) {
@@ -745,22 +731,6 @@ function doChat() {
       document.getElementById('chat-messages').scrollTop = 99999;
     }
   }, 80);
-
-  function drainChars() {
-    if (tokenQueue.length > 0) {
-      accText += tokenQueue.shift();
-      drainTimer = setTimeout(drainChars, 8);
-    } else if (sseComplete) {
-      clearInterval(renderTimer);
-      botBubble.innerHTML = marked.parse(reply);
-      sessions[sessionKey].chatMessages.push({ role: 'assistant', content: reply });
-      streaming = false;
-      document.getElementById('send-btn').disabled = false;
-      input.focus();
-    } else {
-      drainTimer = null;
-    }
-  }
 
   fetch('/chat', {
     method: 'POST',
@@ -775,18 +745,20 @@ function doChat() {
         throw new Error(evt.data);
       } else if (evt.type === 'token') {
         reply += evt.data;
-        evt.data.split('').forEach(function(ch) { tokenQueue.push(ch); });
-        if (!drainTimer) drainChars();
+        accText += evt.data;
       }
     });
   })
   .then(function() {
-    sseComplete = true;
-    if (!drainTimer) drainChars();
+    clearInterval(renderTimer);
+    botBubble.innerHTML = marked.parse(reply);
+    sessions[sessionKey].chatMessages.push({ role: 'assistant', content: reply });
+    streaming = false;
+    document.getElementById('send-btn').disabled = false;
+    input.focus();
   })
   .catch(function(e) {
     clearInterval(renderTimer);
-    if (drainTimer) { clearTimeout(drainTimer); drainTimer = null; }
     streaming = false;
     document.getElementById('send-btn').disabled = false;
     setStatus('Erro no chat: ' + e.message, 'err');

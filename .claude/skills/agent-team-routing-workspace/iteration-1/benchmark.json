@@ -1,0 +1,394 @@
+{
+  "metadata": {
+    "skill_name": "agent-team-routing",
+    "skill_path": "/Users/glaubercastro/Repositorios/WebCrack/.claude/skills/agent-team-routing",
+    "executor_model": "claude-sonnet-5",
+    "analyzer_model": "claude-opus-5",
+    "timestamp": "2026-09-10T21:22:00Z",
+    "evals_run": [
+      0,
+      1,
+      2
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "eval_name": "revisao-ampla-deve-delegar",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Verifica quais tipos de agente existem antes de propor a equipe",
+          "passed": true,
+          "evidence": "lenco disponível (verificado agora, não presumido)  ```bash find .claude/agents -name \"*.md\" | sed 's|.claude/agents/||;s|\\.md$||' | sort ``` retornou só stubs genéricos do ruflo/claude-flow: `consens"
+        },
+        {
+          "text": "Todos os tipos citados existem de fato (sem nomes inventados)",
+          "passed": true,
+          "evidence": "rramenta `Agent` (a que importa) tem, entre os relevantes: `pr-review-toolkit:code-reviewer`, `pr-review-toolkit:silent-failure-hunter`, `feature-dev:code-reviewer`, `feature-dev:code-explorer`, `code"
+        },
+        {
+          "text": "Propoe equipe de 3 a 5 agentes",
+          "passed": true,
+          "evidence": "amanho da equipe  Diff médio, 3 dimensões independentes → **3 agentes** (a tabela da skill recomenda 1–2 para 3–8 arquivos numa dimensão, 3–4 para diff médio com múltiplas dimensões; aqui ficam 4 arqu"
+        },
+        {
+          "text": "Escolhe topologia fan-out",
+          "passed": true,
+          "evidence": "não uma segunda rodada completa.  ## Passo 4 — Topologia  **Fan-out** para os três revisores: nenhum depende do resultado do outro, cada um ataca um recorte de arquivo diferente. Isso casa com a orien"
+        },
+        {
+          "text": "Particiona escopo dizendo o que cada agente NAO olha",
+          "passed": true,
+          "evidence": ".py`)  ``` Escopo: SOMENTE core.py e agents/synthesizer.py. Não olhe app.py nem templates/index.html — outros agentes cobrem esses.  Comece com:   git -C /Users/glaubercastro/Repositorios/WebCrack dif"
+        },
+        {
+          "text": "Prompts incluem comando git concreto",
+          "passed": true,
+          "evidence": "orreção pontual, então delegar compensa.  Já olhei o diff (`git diff --stat`): 76 inserções / 67 remoções, nada gigante, mas com uma reescrita real de lógica em `core.py` (a função `get_file_tree`) e"
+        },
+        {
+          "text": "Pede marcacao REGRESSAO vs PRE-EXISTENTE",
+          "passed": true,
+          "evidence": "tar erro 413 do Groq. Isso foi removido/ignorado — é uma    regressão de correção deliberada ou um esquecimento? Veja se há alguma    validação de tamanho de payload em outro lugar que compense. 3. CO"
+        },
+        {
+          "text": "Pede marcacao CONFIRMADO vs SUSPEITA",
+          "passed": true,
+          "evidence": "todo).  Formato de saída: lista de achados, cada um com: - CONFIRMADO (você leu o código e traçou o caminho) ou SUSPEITA (não confirmou) - REGRESSÃO (o diff piorou algo que funcionava) ou PRÉ-EXISTEN"
+        },
+        {
+          "text": "Inclui passe de verificacao adversarial (refutar achados)",
+          "passed": true,
+          "evidence": "gentes é o número certo, não 6). Acrescento **1 verificador adversarial** pontual só para o achado de maior severidade que aparecer (ver Passo 6) — não uma segunda rodada completa.  ## Passo 4 — Topol"
+        },
+        {
+          "text": "Instrui agentes a nao editar arquivos",
+          "passed": true,
+          "evidence": "o errado Y (nada de \"pode causar   problemas\" sem exemplo)  Não edite nenhum arquivo. Isto é revisão, não correção. ```  ### → `reviewer-security` (segurança — `app.py` + rede em `core.py`)  ``` Escop"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 0,
+      "eval_name": "revisao-ampla-deve-delegar",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.5,
+        "passed": 5,
+        "failed": 5,
+        "total": 10,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Verifica quais tipos de agente existem antes de propor a equipe",
+          "passed": false,
+          "evidence": "nao encontrado"
+        },
+        {
+          "text": "Todos os tipos citados existem de fato (sem nomes inventados)",
+          "passed": false,
+          "evidence": "nao encontrado"
+        },
+        {
+          "text": "Propoe equipe de 3 a 5 agentes",
+          "passed": false,
+          "evidence": "nao encontrado"
+        },
+        {
+          "text": "Escolhe topologia fan-out",
+          "passed": true,
+          "evidence": "ler tudo sequencialmente.  ## 2. Estratégia de execução  **Fan-out por especialidade + uma etapa de triagem no final.** Três revisores trabalham em paralelo sobre o mesmo diff (cada um com um recorte"
+        },
+        {
+          "text": "Particiona escopo dizendo o que cada agente NAO olha",
+          "passed": true,
+          "evidence": "eue`) removida — texto acumula direto em `accText` | | `.gitignore`, `.vscode/launch.json` | Ajustes de tooling local (ruflo, porta de debug) | | `AGENTS.md` | Deletado (59 linhas) |  Isso mistura pel"
+        },
+        {
+          "text": "Prompts incluem comando git concreto",
+          "passed": true,
+          "evidence": "# Plano de revisão pré-commit — WebCrack  Só li o diff (`git diff`) e os arquivos completos para me situar — não editei nada. Abaixo está o plano concreto, incluindo os prompts que cada agente rece"
+        },
+        {
+          "text": "Pede marcacao REGRESSAO vs PRE-EXISTENTE",
+          "passed": true,
+          "evidence": "`git log -p`/`git blame` para classificar cada ponto como **regressão** (o diff piorou algo que funcionava) ou **problema pré-existente** (já estava lá, o diff só tocou a área).  Não uso pipeline sequ"
+        },
+        {
+          "text": "Pede marcacao CONFIRMADO vs SUSPEITA",
+          "passed": false,
+          "evidence": "nao encontrado"
+        },
+        {
+          "text": "Inclui passe de verificacao adversarial (refutar achados)",
+          "passed": false,
+          "evidence": "nao encontrado"
+        },
+        {
+          "text": "Instrui agentes a nao editar arquivos",
+          "passed": true,
+          "evidence": "diff (`git diff`) e os arquivos completos para me situar — não editei nada. Abaixo está o plano concreto, incluindo os prompts que cada agente receberia. Não executei nenhum agente.  ## 1. O que está"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "tarefa-pequena-nao-deve-delegar",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recusa explicitamente montar equipe",
+          "passed": true,
+          "evidence": "Não, não vale montar uma equipe de agentes para isso.  Segui a skill `agent-team-routing` (Passo 1 — decidir se vale delegar): corrigir um t"
+        },
+        {
+          "text": "Justifica pelo tamanho do trabalho e custo de delegar",
+          "passed": true,
+          "evidence": "le delegar): corrigir um typo de comentário é uma edição de uma linha, em um único arquivo, sem dimensões que se contradigam (não há corretude vs. segurança vs. performance em jogo aqui). A própria sk"
+        },
+        {
+          "text": "Propoe fazer a correcao diretamente",
+          "passed": true,
+          "evidence": "qual comentário exato tem o erro (ou cole o trecho) que eu edito na hora, sem precisar de equipe nenhuma para isso."
+        },
+        {
+          "text": "Nao propoe nenhum agente nomeado nem topologia de swarm",
+          "passed": true,
+          "evidence": "nenhum subagent_type ficticio encontrado"
+        },
+        {
+          "text": "Olha o conteudo real da linha 27 antes de responder",
+          "passed": true,
+          "evidence": "ressalva antes de aplicar a correção: conferi `core.py` e a linha 27 **hoje** não tem comentário nenhum — é `\"temperature\": 0.3,`, sem `#`. As linhas vizinhas que têm comentário são:  - linha 26: `\"mo"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "tarefa-pequena-nao-deve-delegar",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Recusa explicitamente montar equipe",
+          "passed": true,
+          "evidence": "Não, não faz sentido montar uma equipe de agentes pra isso — é a correção de um comentário em uma linha só, então resolvo direto (e nem cheg"
+        },
+        {
+          "text": "Justifica pelo tamanho do trabalho e custo de delegar",
+          "passed": true,
+          "evidence": "uipe de agentes pra isso — é a correção de um comentário em uma linha só, então resolvo direto (e nem cheguei a editar nada, só investiguei).  Só que, ao conferir, a linha 27 de `core.py` (tanto na su"
+        },
+        {
+          "text": "Propoe fazer a correcao diretamente",
+          "passed": true,
+          "evidence": "isso — é a correção de um comentário em uma linha só, então resolvo direto (e nem cheguei a editar nada, só investiguei).  Só que, ao conferir, a linha 27 de `core.py` (tanto na sua working tree quant"
+        },
+        {
+          "text": "Nao propoe nenhum agente nomeado nem topologia de swarm",
+          "passed": true,
+          "evidence": "nenhum subagent_type ficticio encontrado"
+        },
+        {
+          "text": "Olha o conteudo real da linha 27 antes de responder",
+          "passed": true,
+          "evidence": "uei a editar nada, só investiguei).  Só que, ao conferir, a linha 27 de `core.py` (tanto na sua working tree quanto no `HEAD`) é esta, e não tem comentário nenhum nela:  ``` 27:    \"temperature\": 0.3,"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "elenco-inexistente-deve-verificar",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Verifica ativamente se os 4 tipos pedidos existem",
+          "passed": true,
+          "evidence": "to rotula os papéis nas tabelas \"Agents\" e \"Agent Routing\". Conferi as duas fontes reais de tipos de agente disponíveis agora:  ```bash find .claude/agents -name \"*.md\" | sed 's|.*/.claude/agents/||;s"
+        },
+        {
+          "text": "Informa que esses tipos nao existem no ambiente",
+          "passed": true,
+          "evidence": ".py  ## Aviso importante antes do plano: os 4 nomes pedidos não existem  Você pediu `coder`, `reviewer`, `tester` e `security-architect` porque é assim que o `CLAUDE.md` do projeto rotula os papéis na"
+        },
+        {
+          "text": "Propoe substitutos que existem de fato",
+          "passed": true,
+          "evidence": "---|---|---|---| | `security-architect` | tipo de agente | `code-modernization:security-auditor` | É literalmente um revisor de segurança adversarial (OWASP Top 10, CWE, CVEs de dependência, secrets,"
+        },
+        {
+          "text": "Declara explicitamente a substituicao feita para cada nome",
+          "passed": true,
+          "evidence": "ado em doc não é garantia de que o tipo existe. Vou usar os substitutos mais próximos disponíveis e deixar a substituição explícita, em vez de disparar um nome que cairia silenciosamente num agente ge"
+        },
+        {
+          "text": "Nao usa os nomes ficticios como subagent_type",
+          "passed": true,
+          "evidence": "nenhum subagent_type ficticio encontrado"
+        },
+        {
+          "text": "Dimensiona a equipe a 2 arquivos (nao propoe 8+ agentes)",
+          "passed": true,
+          "evidence": "sugerido, sem aplicá-lo |  Se preferir, posso rodar só com 2 agentes (security-auditor + code-reviewer) e pular tester/coder — dado que `core.py` (367 linhas) e `app.py` (177 linhas) são pequenos, 4"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "elenco-inexistente-deve-verificar",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.667,
+        "passed": 4,
+        "failed": 2,
+        "total": 6,
+        "time_seconds": 0,
+        "tokens": 0,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Verifica ativamente se os 4 tipos pedidos existem",
+          "passed": true,
+          "evidence": "er`, `tester` porque foi o que você pediu explicitamente).  Conferi a lista de tipos de agente nativos disponíveis nesta sessão para o `Agent` tool. Nenhum desses quatro nomes existe como `subagent_ty"
+        },
+        {
+          "text": "Informa que esses tipos nao existem no ambiente",
+          "passed": true,
+          "evidence": "gente nativos disponíveis nesta sessão para o `Agent` tool. Nenhum desses quatro nomes existe como `subagent_type` nativo — os tipos reais disponíveis são coisas como `general-purpose`, `Explore`, `Pl"
+        },
+        {
+          "text": "Propoe substitutos que existem de fato",
+          "passed": false,
+          "evidence": "nao encontrado"
+        },
+        {
+          "text": "Declara explicitamente a substituicao feita para cada nome",
+          "passed": true,
+          "evidence": "ismos de segurança) ou `production-validator`, mas eles não substituem o papel de \"security-architect\" que o CLAUDE.md descreve (esse é conceitual, não nativo).  Feita essa checagem, o plano abaixo se"
+        },
+        {
+          "text": "Nao usa os nomes ficticios como subagent_type",
+          "passed": true,
+          "evidence": "nenhum subagent_type ficticio encontrado"
+        },
+        {
+          "text": "Dimensiona a equipe a 2 arquivos (nao propoe 8+ agentes)",
+          "passed": false,
+          "evidence": "nao encontrado"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      },
+      "tokens": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.722,
+        "stddev": 0.208,
+        "min": 0.5,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      },
+      "tokens": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.28",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+  "notes": [
+    "Eval 1 (tarefa pequena) nao discrimina: 5/5 nas duas configuracoes. O modelo ja recusa delegar tarefas triviais sem a skill.",
+    "Eval 0 e o maior diferencial (10/10 vs 5/10): sem a skill o baseline nao verifica o elenco, nao pede CONFIRMADO/SUSPEITA e nao faz verificacao adversarial.",
+    "Eval 2: a skill vence no processo (6/6 vs 4/6), MAS o baseline leu o codigo e produziu 7 achados de seguranca concretos (incl. path traversal em app.py:157-164) que a versao com skill nao produziu. Os criterios medem processo, nao valor entregue.",
+    "Timing/tokens nao foram capturados: as notificacoes recebidas foram idle_notification sem total_tokens/duration_ms."
+  ]
+}

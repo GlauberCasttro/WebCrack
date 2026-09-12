@@ -1,0 +1,34 @@
+{
+  "expectations": [
+    {
+      "text": "Verifica ativamente se os 4 tipos pedidos existem",
+      "passed": true,
+      "evidence": "to rotula os papéis nas tabelas \"Agents\" e \"Agent Routing\". Conferi as duas fontes reais de tipos de agente disponíveis agora:  ```bash find .claude/agents -name \"*.md\" | sed 's|.*/.claude/agents/||;s"
+    },
+    {
+      "text": "Informa que esses tipos nao existem no ambiente",
+      "passed": true,
+      "evidence": ".py  ## Aviso importante antes do plano: os 4 nomes pedidos não existem  Você pediu `coder`, `reviewer`, `tester` e `security-architect` porque é assim que o `CLAUDE.md` do projeto rotula os papéis na"
+    },
+    {
+      "text": "Propoe substitutos que existem de fato",
+      "passed": true,
+      "evidence": "---|---|---|---| | `security-architect` | tipo de agente | `code-modernization:security-auditor` | É literalmente um revisor de segurança adversarial (OWASP Top 10, CWE, CVEs de dependência, secrets,"
+    },
+    {
+      "text": "Declara explicitamente a substituicao feita para cada nome",
+      "passed": true,
+      "evidence": "ado em doc não é garantia de que o tipo existe. Vou usar os substitutos mais próximos disponíveis e deixar a substituição explícita, em vez de disparar um nome que cairia silenciosamente num agente ge"
+    },
+    {
+      "text": "Nao usa os nomes ficticios como subagent_type",
+      "passed": true,
+      "evidence": "nenhum subagent_type ficticio encontrado"
+    },
+    {
+      "text": "Dimensiona a equipe a 2 arquivos (nao propoe 8+ agentes)",
+      "passed": true,
+      "evidence": "sugerido, sem aplicá-lo |  Se preferir, posso rodar só com 2 agentes (security-auditor + code-reviewer) e pular tester/coder — dado que `core.py` (367 linhas) e `app.py` (177 linhas) são pequenos, 4"
+    }
+  ]
+}

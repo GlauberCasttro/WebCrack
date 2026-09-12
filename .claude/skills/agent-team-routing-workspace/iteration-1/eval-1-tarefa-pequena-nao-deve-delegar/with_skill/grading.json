@@ -1,0 +1,29 @@
+{
+  "expectations": [
+    {
+      "text": "Recusa explicitamente montar equipe",
+      "passed": true,
+      "evidence": "Não, não vale montar uma equipe de agentes para isso.  Segui a skill `agent-team-routing` (Passo 1 — decidir se vale delegar): corrigir um t"
+    },
+    {
+      "text": "Justifica pelo tamanho do trabalho e custo de delegar",
+      "passed": true,
+      "evidence": "le delegar): corrigir um typo de comentário é uma edição de uma linha, em um único arquivo, sem dimensões que se contradigam (não há corretude vs. segurança vs. performance em jogo aqui). A própria sk"
+    },
+    {
+      "text": "Propoe fazer a correcao diretamente",
+      "passed": true,
+      "evidence": "qual comentário exato tem o erro (ou cole o trecho) que eu edito na hora, sem precisar de equipe nenhuma para isso."
+    },
+    {
+      "text": "Nao propoe nenhum agente nomeado nem topologia de swarm",
+      "passed": true,
+      "evidence": "nenhum subagent_type ficticio encontrado"
+    },
+    {
+      "text": "Olha o conteudo real da linha 27 antes de responder",
+      "passed": true,
+      "evidence": "ressalva antes de aplicar a correção: conferi `core.py` e a linha 27 **hoje** não tem comentário nenhum — é `\"temperature\": 0.3,`, sem `#`. As linhas vizinhas que têm comentário são:  - linha 26: `\"mo"
+    }
+  ]
+}
